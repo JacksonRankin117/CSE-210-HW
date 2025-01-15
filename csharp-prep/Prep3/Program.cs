@@ -7,13 +7,12 @@ class Program
         // Creates a variable to keep track of the number of guesses
         int numGuesses = 1;
 
-        // Asks the user for the magic number and converts it to an integer
-        Console.WriteLine("What is the magic number? ");
-        string magicNumInput = Console.ReadLine();
-        int magicNum = int.Parse(magicNumInput);
+        // Generates a random number between 1 and 100
+        Random randomGenerator = new Random();
+        int magicNum = randomGenerator.Next(1, 101);
 
         // Asks the user to guess, and converts it to an integer
-        Console.WriteLine("What is your guess? ");
+        Console.WriteLine("Guess a number between 1 and 100");
         string guessInput = Console.ReadLine();
         int guessNum = int.Parse(guessInput);
 
@@ -33,7 +32,7 @@ class Program
             }
         }
 
-        // Congratulates the user on a job well done.
+        // Congratulates the user on a job well
         Console.Write($"Congratulations! You got the magic number {magicNum} in {numGuesses} tries.");
     }
 }
