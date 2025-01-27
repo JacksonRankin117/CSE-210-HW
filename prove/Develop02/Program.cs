@@ -6,6 +6,6 @@ class Program
     {
         Prompt randPrompt = new Prompt();
 
-        randPrompt.displayPrompt();
+        randPrompt.DisplayPrompt();
     }
 }

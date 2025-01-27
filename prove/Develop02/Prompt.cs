@@ -5,6 +5,7 @@ public class Prompt
     // Class Attibutes
     public string _prompt;
 
+    // This method 
     public void displayPrompt()
     {   
         // Generates a random number from 1-5
@@ -29,7 +30,8 @@ public class Prompt
                 _prompt = "Prompt5";
                 break;
         }
-    // Outputs the prompt to the console
+
+    // Writes the prompt to the console
     Console.WriteLine(_prompt);
     }
 }
