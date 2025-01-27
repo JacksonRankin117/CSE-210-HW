@@ -5,9 +5,9 @@ public class Prompt
     // Class Attibutes
     public string _prompt;
 
-    // This method 
-    public void displayPrompt()
-    {   
+    // This method displays a random prompt when called
+    public void DisplayPrompt() {  
+ 
         // Generates a random number from 1-5
         int rnd = new Random().Next(1, 6);
 
@@ -33,5 +33,6 @@ public class Prompt
 
     // Writes the prompt to the console
     Console.WriteLine(_prompt);
+
     }
 }
