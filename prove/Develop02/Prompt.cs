@@ -1,8 +1,8 @@
 using System;
 
-public class Prompt 
+class Prompt 
 {   
-    // Class Attibutes
+    // Class Attributes
     public string _prompt;
 
     // This method displays a random prompt when called
@@ -32,7 +32,7 @@ public class Prompt
         }
 
     // Writes the prompt to the console
-    Console.WriteLine(_prompt);
+    Console.Write(_prompt);
 
     }
 }
