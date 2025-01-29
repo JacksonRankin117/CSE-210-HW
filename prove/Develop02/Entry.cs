@@ -1,18 +1,22 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
+using System.Net.Mail;
 
 class Entry
 {
     // Class Attributes
-    public string _Prompt;
-    public string _EntryDateTime;
-    public string _EntryText;
+    private Prompt _prompt = new Prompt();
+    private DateTime _dateTime = DateTime.Now;
+    private string _entryText;
 
-    //
-    public void Display() {
-        Console.WriteLine($"{_EntryDateTime} - ");
-        Console.WriteLine($"{_EntryText}");
+    public void Display()
+    {
+        // Get a random prompt
+        string prompt = _prompt.GetRandomPrompt();
 
+        // Display prompt and get user input
+        Console.WriteLine($"{_dateTime} - {prompt}");
+        _entryText = Console.ReadLine();
     }
-
 }

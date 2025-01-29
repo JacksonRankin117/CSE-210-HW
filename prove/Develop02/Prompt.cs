@@ -1,38 +1,19 @@
-using System;
+class Prompt
+{
+    // List of prompts
+    private List<string> _prompts = new List<string>
+    {
+        "What was one challenge you had today, and how did you overcome it?",
+        "If there was something you could change about your day, what would it be?",
+        "What are you most grateful about today?",
+        "What was the most interesting thing you have learned today?",
+        "What was one mistake you made today, and how will you correct it?"
+    };
 
-class Prompt 
-{   
-    // Class Attributes
-    public string _prompt;
-
-    // This method displays a random prompt when called
-    public void DisplayPrompt() {  
- 
-        // Generates a random number from 1-5
-        int rnd = new Random().Next(1, 6);
-
-        // Stores a random prompt in _prompt
-        switch (rnd)
-        {   
-            case 1:
-                _prompt = "Prompt1";
-                break;
-            case 2:
-                _prompt = "Prompt2";
-                break;
-            case 3:
-                _prompt = "Prompt3";
-                break;
-            case 4:
-                _prompt = "Prompt4";
-                break;
-            case 5:
-                _prompt = "Prompt5";
-                break;
-        }
-
-    // Writes the prompt to the console
-    Console.Write(_prompt);
-
+    // Method to get a random prompt
+    public string GetRandomPrompt()
+    {
+        Random rnd = new Random();
+        return _prompts[rnd.Next(_prompts.Count)];
     }
 }
