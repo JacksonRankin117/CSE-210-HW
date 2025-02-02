@@ -14,7 +14,7 @@ class Program
         */
 
         Journal journal = new Journal();
-        journal.menu();
+        journal.Menu();
         
     }
 }

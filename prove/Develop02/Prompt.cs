@@ -1,3 +1,5 @@
+using System;
+
 class Prompt
 {
     // List of prompts
