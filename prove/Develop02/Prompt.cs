@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 class Prompt
 {
@@ -12,10 +13,16 @@ class Prompt
         "What was one mistake you made today, and how will you correct it?"
     };
 
-    // Method to get a random prompt
+    // Method to get a random prompt along with the current date and time
     public string GetRandomPrompt()
     {
         Random rnd = new Random();
-        return _prompts[rnd.Next(_prompts.Count)];
+        string randomPrompt = _prompts[rnd.Next(_prompts.Count)];
+
+        // Get the current date and time
+        string dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+        // Combine the date/time with the prompt
+        return $"{dateTime} - {randomPrompt}";
     }
 }

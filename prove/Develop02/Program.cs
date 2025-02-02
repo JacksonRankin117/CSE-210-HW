@@ -4,17 +4,10 @@ class Program
 {
     static void Main(string[] args)
     {   
-        /*
-        // Stores the prompt
-        Prompt randPrompt = new Prompt();
-        Entry idkman = new Entry();
-
-        // Displays the journal heading and entry to the console
-        idkman.Display();
-        */
-
+        // Initialize the Journal
         Journal journal = new Journal();
-        journal.Menu();
         
+        // Start the menu system where users can interact with their journal
+        journal.Menu();
     }
 }
