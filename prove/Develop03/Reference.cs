@@ -2,19 +2,21 @@ using System;
 
 class Reference
 {
-    private string book;
-    private int chapter;
-    private int verse;
+    // Holds all the information for the reference of the scripture
+    private string _book;
+    private int _chapter;
+    private int _verse;
 
     public Reference(string book, int chapter, int verse)
     {
-        this.book = book;
-        this.chapter = chapter;
-        this.verse = verse;
+        _book = book;
+        _chapter = chapter;
+        _verse = verse;
     }
-
+    // I just looked up how to do this to be completely honest
     public override string ToString()
-    {
-        return book + " " + chapter + ":" + verse;
+    {   
+        // Makes the reference a string
+        return _book + " " + _chapter + ":" + _verse;
     }
 }

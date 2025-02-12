@@ -7,18 +7,20 @@ class Word
 
     public Word(string text)
     {
-        // 
+        // Initializes each word as the original word and visible
         original = text;
         isHidden = false;
     }
 
     public void Hide()
-    {
+    {   
+        // Changes the status of the word to invisible
         isHidden = true;
     }
 
     public bool IsHidden()
-    {
+    {   
+        // Returns the status of the Word
         return isHidden;
     }
 
