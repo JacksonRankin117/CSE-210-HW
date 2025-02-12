@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 class Program
 {
@@ -21,9 +19,10 @@ class Program
             scripture.HideRandomWords(3);
         }
         
-        Console.Clear();
-        scripture.Display();
-        Console.WriteLine("\nAll words are hidden. Press any key to exit.");
-        Console.ReadKey();
+        if (scripture.AllWordsHidden()) {
+            Console.Clear();
+            scripture.Display();
+            Console.WriteLine("\nAll words are hidden. Thanks for memorizing this scripture!");
+        }
     }
 }

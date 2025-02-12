@@ -3,23 +3,31 @@ using System;
 class Word
 {
     private string original;
-    public bool IsHidden { get; private set; }
+    private bool isHidden;
 
     public Word(string text)
     {
+        // 
         original = text;
-        IsHidden = false;
+        isHidden = false;
     }
 
     public void Hide()
     {
-        IsHidden = true;
+        isHidden = true;
+    }
+
+    public bool IsHidden()
+    {
+        return isHidden;
     }
 
     public string Display()
     {
-        // I had to look up how to do this, but this line allows the Word class
-        // to progressively replace the words with '_'
-        return IsHidden ? new string('_', original.Length) : original;
+        // I'm gonna be honest, I looked up how to do this
+        // This part returns a bunch of '_' with the same length as the 
+        // original word
+        string masked = new string('_', original.Length);
+        return isHidden ? masked : original;
     }
 }
