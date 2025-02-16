@@ -1,22 +1,27 @@
-using System;
-
 class Reference
 {
-    // Holds all the information for the reference of the scripture
     private string _book;
     private int _chapter;
-    private int _verse;
+    private int _startVerse;
+    private int _endVerse;
 
-    public Reference(string book, int chapter, int verse)
+    public Reference(string book, int chapter, int startVerse, int endVerse = -1)
     {
         _book = book;
         _chapter = chapter;
-        _verse = verse;
+        _startVerse = startVerse;
+        _endVerse = endVerse == -1 ? startVerse : endVerse;
     }
-    // I just looked up how to do this to be completely honest
+
+    public int GetStartVerse()
+    {
+        return _startVerse;
+    }
+
     public override string ToString()
     {   
-        // Makes the reference a string
-        return _book + " " + _chapter + ":" + _verse;
+        return _endVerse == _startVerse 
+            ? $"{_book} {_chapter}:{_startVerse}" 
+            : $"{_book} {_chapter}:{_startVerse}-{_endVerse}";
     }
 }
