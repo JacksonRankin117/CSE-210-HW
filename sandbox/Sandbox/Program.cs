@@ -1,9 +1,18 @@
 using System;
 
-class Program
+class Program{
+    static void Main() {
+        Circle circle = new Circle();
+        Console.WriteLine(circle.SurfaceArea(1));
+
+    }
+}
+
+class Circle
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello Sandbox World!");
+    public double _pi = 3.141592653589792328;
+
+    public double SurfaceArea(double radius) {
+        return radius * _pi;
     }
 }
