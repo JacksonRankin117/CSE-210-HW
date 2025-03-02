@@ -1,38 +1,45 @@
 using System;
+using System.Collections.Generic;
 
-class Timer{
+class Timer
+{
     public void DisplayLoadingIcon(int duration)
     {   
         // List of loading icons
         List<string> loadingIcons = new List<string>{"|", "/", "-", "\\"};
 
-        // Starts at zero seconds
+        // Start time and end time
         int _startTime = 0;
-
-        // Ends when it reaches the duration
         int _endTime = duration;
+
+        // Progress bar elements
+        int progressBarLength = 30;
+        int progress = 0;
 
         // Starts at the first index of the list
         int _index = 0;
 
         while (_startTime < _endTime)
         {
-            foreach (string icon in loadingIcons)
-            {
-                // Display the loading icon
-                Console.Write(icon);
+            // Print loading icon with progress bar
+            string progressBar = new string('#', progress) + new string('-', progressBarLength - progress);
+            Console.Write("\r[{0}] {1} {2}s remaining", progressBar, loadingIcons[_index], (_endTime - _startTime));
 
-                // Wait for 1 second
-                System.Threading.Thread.Sleep(250);
+            // Wait for 1 second
+            System.Threading.Thread.Sleep(1000);
 
-                // Clear the last character
-                Console.Write("\b \b");
-
-                // Move to the next icon in the list
-                _index = (_index + 1) % loadingIcons.Count;
-            }
-            // Increment the start time
+            // Increment start time
             _startTime++;
+
+            // Update progress based on the elapsed time
+            progress = (int)((_startTime / (float)_endTime) * progressBarLength);
+
+            // Move to the next icon in the list
+            _index = (_index + 1) % loadingIcons.Count;
         }
+
+        // Ensure the progress bar is fully filled at the end
+        string finalProgressBar = new string('#', progressBarLength);
+        Console.WriteLine($"\r[{finalProgressBar}] {loadingIcons[_index]} 0s remaining\nTime's up!");
     }
 }
