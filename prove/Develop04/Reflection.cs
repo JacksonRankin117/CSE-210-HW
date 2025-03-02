@@ -59,12 +59,6 @@ class ReflectionActivity : Activity
             // Reads the entry
             string newEntry = Console.ReadLine();
 
-            // Adds the entry to the list
-            if (!string.IsNullOrWhiteSpace(newEntry))
-            {
-                _entries.Add(newEntry);
-            }
-
         } while ((DateTime.Now - startTime).TotalSeconds < _duration);
 
         // Tells the user how many entries they wrote
