@@ -1,23 +1,23 @@
 using System;
 
-class Breathing : Activity
+class BreathingActivity : Activity
 {
-    private int _duration;
-    private string _title;
-    private string _description;
-
-    public Breathing(string title, string description, int duration) : base(title, description, duration)
+    private int startTime = 0;
+    private int _inhale = 5;
+    private int _exhale = 10;
+    
+    public void BeginBreathing() 
     {
-        _title = title;
-        _description = description;
-        _duration = duration;
-    }
+        Console.WriteLine("Prepare to begin by calming your mind. The activity will begin shortly");
+        _timer.DisplayLoadingIcon(5);
+        
+        while (_duration >= startTime) {
+            Console.WriteLine("Breathe in...");
+            _timer.DisplayLoadingIcon(_inhale);
 
-    public void StartBreathing()
-    {
-        Console.WriteLine($"Starting the {_title} activity.");
-        Console.WriteLine(_description);
-        Console.WriteLine($"Duration: {_duration} seconds");
-        Console.WriteLine("Get ready to breathe in and out.");
+            Console.WriteLine("Breathe out...");
+            _timer.DisplayLoadingIcon(_exhale);
+            startTime += _inhale + _exhale;
+        }
     }
 }

@@ -1,23 +1,42 @@
 using System;
 
-class Listing : Activity 
+class ListingActivity : Activity
 {
-    private int _duration;
-    private string _title;
-    private string _description;
-
-    public Listing(string title, string description, int duration) : base(title, description, duration)
+    private List<string> _prompts = new List<string>() 
     {
-        _title = title;
-        _description = description;
-        _duration = duration;
-    }
+        "Who are people that you appreciate?",
+        "What are personal strengths of yours?",
+        "Who are people that you have helped this week?",
+        "When have you felt the Holy Ghost this month?",
+        "Who are some of your personal heroes?"
+    };
 
-    public void StartListing()
+    public void BeginListing() 
     {
-        Console.WriteLine($"Starting the {_title} activity.");
-        Console.WriteLine(_description);
-        Console.WriteLine($"Duration: {_duration} seconds");
-        Console.WriteLine("Get ready to list your thoughts.");
+        // Randomly select a prompt
+        Random rand = new Random();
+        string selectedPrompt = _prompts[rand.Next(_prompts.Count)];
+
+        Console.WriteLine("Prompt: " + selectedPrompt);
+        Console.WriteLine("Get ready to start listing...");
+        
+        // Countdown before the user starts listing
+        _timer.DisplayLoadingIcon(5);  // 5 seconds countdown for thinking
+
+        Console.WriteLine("Begin listing now!");
+        List<string> userItems = new List<string>();
+
+        // Start the timer to give the user time to list items
+        DateTime endTime = DateTime.Now.AddSeconds(_duration);
+
+        while (DateTime.Now < endTime)
+        {   
+            string userInput = Console.ReadLine();
+            userItems.Add(userInput);
+            
+        }
+
+        // Display how many items the user entered
+        Console.WriteLine($"You entered {userItems.Count} items.");
     }
 }
