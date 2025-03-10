@@ -1,5 +1,5 @@
 class Checklist : Goal 
-{
+{   
     public override bool IsDone()
     {
         return false;

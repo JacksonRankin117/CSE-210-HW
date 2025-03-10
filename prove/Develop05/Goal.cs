@@ -1,8 +1,8 @@
 public abstract class Goal 
 {
     public int _points;
-    private string _title;
-    private string _desc;
+    public string _title;
+    public string _desc;
 
     public abstract bool IsDone();
     public abstract int CalcPoints();

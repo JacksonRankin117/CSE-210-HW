@@ -24,5 +24,4 @@ class Simple : Goal
     {
 
     }
-
 }
