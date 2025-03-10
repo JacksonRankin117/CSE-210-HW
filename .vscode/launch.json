@@ -125,7 +125,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-prepare-Learning05",
-            "program": "${workspaceFolder}/prepare/Learning05/bin/Debug/net9.0/Learning05.dll",
+            "program": "${workspaceFolder}/prepare/Learning05/bin/Debug/net8.0/Learning05.dll",
             "args": [],
             "cwd": "${workspaceFolder}/prepare/Learning05",
             "console": "integratedTerminal",
