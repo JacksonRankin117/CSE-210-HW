@@ -177,7 +177,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-prove-Develop05",
-            "program": "${workspaceFolder}/prove/Develop05/bin/Debug/net9.0/Develop05.dll",
+            "program": "${workspaceFolder}/prove/Develop05/bin/Debug/net8.0/Develop05.dll",
             "args": [],
             "cwd": "${workspaceFolder}/prove/Develop05",
             "console": "integratedTerminal",
