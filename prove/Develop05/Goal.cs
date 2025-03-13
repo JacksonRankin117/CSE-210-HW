@@ -4,6 +4,7 @@ public abstract class Goal
     public string _title;
     public string _desc;
 
+    public abstract void GetDescription();
     public abstract bool IsDone();
     public abstract int CalcPoints();
     public abstract void Save();
