@@ -1,0 +1,4 @@
+50
+Simple|Do 25 jumping jacks|This goal will be completed when I have done 25 jumping jacks|50|True
+Checklist|Try three foreign foods|This goal will be completed once I have eaten three different foreign foods in which I think are a little strange to my palate|25|75|0|3
+Eternal|Daily scripture study|This goal will never be completed, but it entails getting up every morning, and before breakfast I study the scriptures|10
