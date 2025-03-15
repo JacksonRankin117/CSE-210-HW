@@ -1,91 +1,228 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace donut.net
+class Program
 {
-    class Program
+    static List<Goal> goals = new List<Goal>();
+    static int totalPoints = 0;
+    static void Main(string[] args)
+    {   
+        string choice;
+        do {
+            Console.WriteLine("Welcome to the Goal Tracker!");
+            Console.WriteLine("1. Create a new goal");
+            Console.WriteLine("2. List goals");
+            Console.WriteLine("3. Save goals");
+            Console.WriteLine("4. Load goals");
+            Console.WriteLine("5. Record event");
+            Console.WriteLine("6. Quit");
+            Console.Write("Choice: ");
+            choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    CreateGoal();
+                    break;
+                case "2":
+                    ListGoals();
+                    break;
+                case "3":
+                    SaveGoals();
+                    break;
+                case "4":
+                    LoadGoals();
+                    break;
+                case "5":
+                    RecordEvent();
+                    break;
+                case "6":
+                    Console.WriteLine("Goodbye!");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice, try again.");
+                    break;
+            }
+        } while (choice != "6");
+    }
+
+    static void CreateGoal()
     {
-        static void Main(string[] args)
+        Console.WriteLine("Choose goal type: 1. Simple 2. Checklist 3. Eternal");
+        string goalType = Console.ReadLine();
+        Goal newGoal = null;
+        
+        switch (goalType)
         {
-            // Initialize rotation angles and variables for donut rendering
-            double A = 0, B = 0, i, j;
-            var z = new double[7040]; // Array for depth values
-            var b = new char[1760];  // Array for the 2D donut display
-
-            // Infinite loop for continuous donut rendering
-            while (true)
-            {
-                // Reset the arrays for the next frame
-                memset(b, ' ', 1760);
-                memset(z, 0.0f, 7040);
-
-                // Loop through the angles for the donut shape
-                for (j = 0; j < 6.28; j += 0.07)
-                {
-                    for (i = 0; i < 6.28; i += 0.02)
-                    {
-                        // Precompute trigonometrical values
-                        double c = Math.Sin(i);
-                        double d = Math.Cos(j);
-                        double e = Math.Sin(A);
-                        double f = Math.Sin(j);
-                        double g = Math.Cos(A);
-                        double h = d + 2; // Offset for vertical positioning
-                        double D = 1 / (c * h * e + f * g + 5); // Depth calculation
-
-                        // More trigonometric calculations for 3D positioning
-                        double l = Math.Cos(i);
-                        double m = Math.Cos(B);
-                        double n = Math.Sin(B);
-                        double t = c * h * g - f * e;
-                        
-                        // Calculate screen positions
-                        int x = (int)(40 + 30 * D * (l * h * m - t * n));
-                        int y = (int)(12 + 15 * D * (l * h * n + t * m));
-                        int o = x + 80 * y; // Index for the 2D array (b)
-
-                        // Use the 'shade' index to choose character based on intensity
-                        int N = (int)(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n));
-
-                        // Only update the character if it's within the screen bounds and the new depth is greater
-                        if (y > 0 && y < 22 && x > 0 && x < 80 && D > z[o])
-                        {
-                            z[o] = D; // Update depth
-                            b[o] = ".,-~:;=!*#$@"[N > 0 ? N : 0]; // Update character at the position
-                        }
-                    }
-                }
-
-                // Pause for a short time and then clear the console for the next frame
-                System.Threading.Thread.Sleep(33);
-                Console.Clear();
-                nl(b); // Add newlines for proper display format
-                Console.Write(b); // Display the donut
-
-                // Update the rotation angles for the next frame
-                A += 0.04;
-                B += 0.02;
-            }
+            case "1":
+                newGoal = new Simple();
+                break;
+            case "2":
+                newGoal = new Checklist();
+                break;
+            case "3":
+                newGoal = new Eternal();
+                break;
         }
-
-        // Helper function to initialize array with a value
-        static void memset<T>(T[] buf, T val, int bufsz)
+        
+        if (newGoal != null)
         {
-            // If the array is null, initialize it
-            if (buf == null)
-                buf = new T[bufsz];
-
-            // Fill the array with the specified value
-            for (int i = 0; i < bufsz; i++)
-                buf[i] = val;
-        }
-
-        // Helper function to insert newline characters at proper intervals
-        static void nl(char[] b)
-        {
-            for (int i = 80; i < 1760; i += 80)
-            {
-                b[i] = '\n'; // Insert newline at every 80th index
-            }
+            newGoal.GetDescription();
+            goals.Add(newGoal);
         }
     }
+
+    static void ListGoals()
+    {
+        Console.WriteLine("Your goals:");
+        for (int i = 0; i < goals.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {goals[i].Display()}");
+        }
+        Console.WriteLine($"Total Points: {totalPoints}");
+    }
+
+    static void SaveGoals()
+    {
+        using (StreamWriter writer = new StreamWriter("goals.txt"))
+        {
+            writer.WriteLine(totalPoints);
+            foreach (Goal goal in goals)
+            {
+                writer.WriteLine(goal.Save());
+            }
+        }
+        Console.WriteLine("Goals saved successfully!");
+    }
+
+    static void LoadGoals()
+    {
+        if (!File.Exists("goals.txt"))
+        {
+            Console.WriteLine("No saved goals found.");
+            return;
+        }
+        
+        goals.Clear();
+        using (StreamReader reader = new StreamReader("goals.txt"))
+        {
+            totalPoints = int.Parse(reader.ReadLine());
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] parts = line.Split('|');
+                Goal goal = Goal.Load(parts);
+                if (goal != null) goals.Add(goal);
+            }
+        }
+        Console.WriteLine("Goals loaded successfully!");
+    }
+
+    static void RecordEvent()
+    {
+        ListGoals();
+        Console.Write("Enter goal number to mark as done: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+        
+        if (index >= 0 && index < goals.Count)
+        {
+            totalPoints += goals[index].CalcPoints();
+            goals[index].MarkDone();
+        }
+    }
+}
+
+public abstract class Goal 
+{
+    public int Points;
+    public string Title;
+    public string Desc;
+    public abstract void GetDescription();
+    public abstract int CalcPoints();
+    public abstract void MarkDone();
+    public abstract string Save();
+    public static Goal Load(string[] data)
+    {
+        switch (data[0])
+        {
+            case "Simple": return new Simple(data);
+            case "Checklist": return new Checklist(data);
+            case "Eternal": return new Eternal(data);
+        }
+        return null;
+    }
+    public abstract string Display();
+}
+
+class Simple : Goal 
+{
+    private bool IsCompleted = false;
+
+    public Simple() { }
+    public Simple(string[] data)
+    {
+        Title = data[1];
+        Desc = data[2];
+        Points = int.Parse(data[3]);
+        IsCompleted = bool.Parse(data[4]);
+    }
+    public override void GetDescription() 
+    {
+        Console.Write("Title: ");
+        Title = Console.ReadLine();
+        Console.Write("Description: ");
+        Desc = Console.ReadLine();
+        Console.Write("Points: ");
+        Points = int.Parse(Console.ReadLine());
+    }
+    public override int CalcPoints() => IsCompleted ? 0 : Points;
+    public override void MarkDone() => IsCompleted = true;
+    public override string Save() => $"Simple|{Title}|{Desc}|{Points}|{IsCompleted}";
+    public override string Display() => $"[Simple] {Title} - {(IsCompleted ? "Completed" : "Not Done")}";
+}
+
+class Checklist : Goal 
+{   
+    private int Attempts;
+    private int Bonus;
+    private int RequiredAttempts;
+    public Checklist() { }
+    public Checklist(string[] data)
+    {
+        Title = data[1];
+        Desc = data[2];
+        Points = int.Parse(data[3]);
+        Bonus = int.Parse(data[4]);
+        Attempts = int.Parse(data[5]);
+        RequiredAttempts = int.Parse(data[6]);
+    }
+    public override void GetDescription() 
+    {
+        Console.Write("Title: "); Title = Console.ReadLine();
+        Console.Write("Description: "); Desc = Console.ReadLine();
+        Console.Write("Points: "); Points = int.Parse(Console.ReadLine());
+        Console.Write("Bonus: "); Bonus = int.Parse(Console.ReadLine());
+        Console.Write("Attempts required: "); RequiredAttempts = int.Parse(Console.ReadLine());
+    }
+    public override int CalcPoints() => Attempts >= RequiredAttempts ? Points + Bonus : Points;
+    public override void MarkDone() { Attempts++; }
+    public override string Save() => $"Checklist|{Title}|{Desc}|{Points}|{Bonus}|{Attempts}|{RequiredAttempts}";
+    public override string Display() => $"[Checklist] {Title} ({Attempts}/{RequiredAttempts} done)";
+}
+
+class Eternal : Goal 
+{
+    public Eternal() { }
+    public Eternal(string[] data) { Title = data[1]; Desc = data[2]; Points = int.Parse(data[3]); }
+    public override void GetDescription() 
+    {
+        Console.Write("Title: "); Title = Console.ReadLine();
+        Console.Write("Description: "); Desc = Console.ReadLine();
+        Console.Write("Points: "); Points = int.Parse(Console.ReadLine());
+    }
+    public override int CalcPoints() => Points;
+    public override void MarkDone() {}
+    public override string Save() => $"Eternal|{Title}|{Desc}|{Points}";
+    public override string Display() => $"[Eternal] {Title}";
 }
