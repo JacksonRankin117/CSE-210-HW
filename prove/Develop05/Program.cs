@@ -8,7 +8,8 @@ class Program
     static int totalPoints = 0;
 
     static void Main(string[] args)
-    {
+    {   
+        /* Main Menu */
         string choice;
         do {
             Console.Clear();
@@ -43,7 +44,7 @@ class Program
                     RecordEvent();
                     break;
                 case "6":
-                    CalculatePotentialPoints();  // Call the new method to calculate potential points
+                    CalculatePotentialPoints();
                     break;
                 case "7":
                     Console.WriteLine("Goodbye!");
@@ -58,11 +59,13 @@ class Program
 
     static void CreateGoal()
     {   
+        /* Sub-Menu */
         Console.Clear();
         Console.WriteLine("Choose goal type");
         Console.WriteLine("1. Simple ");
         Console.WriteLine("2. Checklist");
         Console.WriteLine("3. Eternal");
+
         string goalType = Console.ReadLine();
         Goal newGoal = null;
         
@@ -79,6 +82,7 @@ class Program
                 break;
         }
         
+        // Checks if the new goal isn't a null type
         if (newGoal != null)
         {
             newGoal.GetDescription();
@@ -90,27 +94,35 @@ class Program
     {
         Console.Clear();
         Console.WriteLine("Your goals:");
+
+        // If there aren't any goals...
         if (goals.Count == 0)
-        {
+        {   
+            // Display:
             Console.WriteLine("No goals found.");
         }
+
         else
-        {
+        {       
+            // Go theough each line and display the goals
             for (int i = 0; i < goals.Count; i++)
-            {
+            {   
                 Console.WriteLine($"{i + 1}. {goals[i].Display()}");
             }
         }
+        // Display the number of points
         Console.WriteLine($"Total Points: {totalPoints}");
-        Console.ReadKey();  // Wait for the user to press a key before returning to the menu
+        Console.ReadKey();
     }
 
 
     static void SaveGoals()
-    {
-        Console.Write("Enter filename to save: ");
+    {   
+        // Get a filename
+        Console.Write("Enter filename to save to: ");
         string filename = Console.ReadLine();
         
+        // Write the file
         using (StreamWriter writer = new StreamWriter(filename))
         {
             writer.WriteLine(totalPoints);
@@ -123,16 +135,20 @@ class Program
     }
 
     static void LoadGoals()
-    {
+    {   
+        // Get the filename to load form the user
         Console.Write("Enter filename to load: ");
         string filename = Console.ReadLine();
         
+        // If it doesn't exist...
         if (!File.Exists(filename))
-        {
+        {   
+            // Say we didn't find it
             Console.WriteLine("No saved goals found.");
             return;
         }
         
+        // But if it does exist, clear the goals from the goal list, and load them with the goals in the file
         goals.Clear();
         using (StreamReader reader = new StreamReader(filename))
         {
@@ -154,11 +170,15 @@ class Program
 
 
     static void RecordEvent()
-    {
+    {   
+        // Calls the method to display each goal
         ListGoals();
+
+        // Asks the user which goal he/she has completed
         Console.Write("Enter goal number to mark as done: ");
         int index = int.Parse(Console.ReadLine()) - 1;
         
+        // Calculates the points, and if its done, complete the goal
         if (index >= 0 && index < goals.Count)
         {
             totalPoints += goals[index].CalcPoints();
@@ -167,10 +187,12 @@ class Program
     }
     
     static void CalculatePotentialPoints()
-    {
+    {   
+        // Reads a filename from the user.
         Console.Write("Enter filename to calculate potential points: ");
         string filename = Console.ReadLine();
         
+        // If the file doesn't exist, tell the user we couldn't find it
         if (!File.Exists(filename))
         {
             Console.WriteLine("No saved goals found.");
@@ -203,24 +225,23 @@ class Program
                         int numberOfItems = int.Parse(parts[6]); // Number of items in the checklist
                         int extraPoints = int.Parse(parts[4]); // Additional points for completing checklist
 
-                        // Debugging output
-                        Console.WriteLine($"Checklist Goal: {pointsPerItem} points/item, {numberOfItems} items, {extraPoints} extra points");
-
-                        // Ensure correct multiplication and addition
+                        // calculates the number of points
                         potentialPoints += (pointsPerItem * numberOfItems) + extraPoints;
                         break;
                             
                     case "Eternal":
-                        // Eternal goals have no potential points
+                        // Eternal goals have no potential points, becuase it could be infinite, really
                         break;
                     
                     default:
+                        // This is probably unecessary, but if this program doesn't recognise the type of goal, it yells at the user
                         Console.WriteLine($"Unknown goal type: {goalType}");
                         break;
                 }
             }
         }
 
+        // Displays the total points to the user, and waits for the user to press a key before going back to the main menu
         Console.WriteLine($"Total Potential Points (excluding Eternal goals): {potentialPoints}");
         Console.WriteLine("\nPress any key to return to the main menu...");
         Console.ReadKey();
