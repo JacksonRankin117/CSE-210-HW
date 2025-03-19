@@ -1,27 +1,13 @@
-using System;
-
-public class Ray
+public struct Ray
 {
-    private Point3 orig;
-    private Vec3 dir;
+    public Vec3 Origin { get; }
+    public Vec3 Direction { get; }
 
-    // Default constructor
-    public Ray() { }
-
-    // Constructor with parameters
-    public Ray(Point3 origin, Vec3 direction)
+    public Ray(Vec3 origin, Vec3 direction)
     {
-        orig = origin;
-        dir = direction;
+        Origin = origin;
+        Direction = direction;
     }
 
-    // Getters for origin and direction
-    public Point3 Origin => orig;
-    public Vec3 Direction => dir;
-
-    // Method to calculate the point at a given distance t along the ray
-    public Point3 At(double t)
-    {
-        return orig + t * dir;
-    }
+    public Vec3 At(float t) => Origin + Direction * t;
 }

@@ -1,21 +1,17 @@
-using System;
+using System.IO;
 
-public class Color : Vec3
+namespace FinalProject
 {
-    public Color(double r, double g, double b) : base(r, g, b) { }
-
-    public void WriteColor(StreamWriter writer)
+    public class Color
     {
-        double r = this.X;
-        double g = this.Y;
-        double b = this.Z;
+        public Color(double r, double g, double b) : base(r, g, b) { }
 
-        // Convert to byte range [0,255]
-        int rByte = (int)(255.999 * r);
-        int gByte = (int)(255.999 * g);
-        int bByte = (int)(255.999 * b);
-
-        // Output color values
-        writer.WriteLine($"{rByte} {gByte} {bByte}");
+        public void WriteColor(StreamWriter writer)
+        {
+            int rByte = (int)(255.999 * X);
+            int gByte = (int)(255.999 * Y);
+            int bByte = (int)(255.999 * Z);
+            writer.WriteLine($"{rByte} {gByte} {bByte}");
+        }
     }
 }
