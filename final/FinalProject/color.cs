@@ -4,7 +4,16 @@ namespace FinalProject
 {
     public class Color
     {
-        public Color(double r, double g, double b) : base(r, g, b) { }
+        public double X { get; set; }  // Red component
+        public double Y { get; set; }  // Green component
+        public double Z { get; set; }  // Blue component
+
+        public Color(double r, double g, double b)
+        {
+            X = r;
+            Y = g;
+            Z = b;
+        }
 
         public void WriteColor(StreamWriter writer)
         {

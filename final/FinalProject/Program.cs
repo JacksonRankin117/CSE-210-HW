@@ -16,7 +16,7 @@ class Program
         // Camera settings
         double focalLength = 1.0;
         double viewportHeight = 2.0;
-        double viewportWidth = viewportHeight * ((double)imageWidth / imageHeight);
+        float viewportWidth = viewportHeight * ((float)imageWidth / imageHeight);
         point3 cameraCenter = new point3(0, 0, 0);
 
         // Calculate viewport vectors
@@ -68,5 +68,41 @@ class Program
     }
 }
 
-// Ensure this file knows about Vec3 where point3 is defined
-using point3 = Vec3;
+public class point3
+{
+    public double X, Y, Z;
+
+    public point3(double x, double y, double z)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+    }
+
+    public static point3 operator +(point3 p1, Vec3 v) => new point3(p1.X + v.X, p1.Y + v.Y, p1.Z + v.Z);
+    public static point3 operator -(point3 p1, Vec3 v) => new point3(p1.X - v.X, p1.Y - v.Y, p1.Z - v.Z);
+}
+
+
+public class Color
+{
+    public double X, Y, Z;
+
+    public Color(double r, double g, double b)
+    {
+        X = r;
+        Y = g;
+        Z = b;
+    }
+
+    public void WriteColor(StreamWriter writer)
+    {
+        int rByte = (int)(255.999 * X);
+        int gByte = (int)(255.999 * Y);
+        int bByte = (int)(255.999 * Z);
+        writer.WriteLine($"{rByte} {gByte} {bByte}");
+    }
+
+    public static Color operator +(Color c1, Color c2) => new Color(c1.X + c2.X, c1.Y + c2.Y, c1.Z + c2.Z);
+    public static Color operator *(double t, Color c) => new Color(t * c.X, t * c.Y, t * c.Z);
+}
