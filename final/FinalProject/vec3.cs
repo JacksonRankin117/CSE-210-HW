@@ -84,6 +84,19 @@ public class Vec3 {
         return v / v.Length();
     }
 
+    public static Vec3 RandomUnitVector()
+    {
+        while (true)
+        {
+            var p = Random(-1, 1);
+            double lensq = p.LengthSquared();
+            if (lensq > 1e-160 && lensq <= 1.0)
+                return p / Math.Sqrt(lensq);
+        }
+    }
+
+    
+
     public static Vec3 Reflect(Vec3 v, Vec3 n) {
         return v - 2 * Dot(v, n) * n;
     }

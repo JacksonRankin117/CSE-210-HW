@@ -26,21 +26,21 @@ class Program
                     b + 0.9 * rand.NextDouble()
                 );
 
-                if ((center - new Vec3(4, 0.2, 0)).Length > 0.33)
+                if ((center - new Vec3(4, 0.2, 0)).Length() > 0.33)
                 {
                     Material sphereMaterial;
 
                     if (chooseMat < 0.33)
                     {
                         // Diffuse
-                        Color albedo = Vec3.Random() * Vec3.Random();
+                        Color albedo = Color.Random() * Color.Random();
                         sphereMaterial = new Lambertian(albedo);
                         world.Add(new Sphere(center, 0.2, sphereMaterial));
                     }
                     else if (chooseMat < 0.66)
                     {
                         // Metal
-                        Color albedo = Vec3.Random(0.5, 1);
+                        Color albedo = Color.Random(0.5, 1);
                         double fuzz = rand.NextDouble() * 0.5;
                         sphereMaterial = new Metal(albedo, fuzz);
                         world.Add(new Sphere(center, 0.2, sphereMaterial));

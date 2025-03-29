@@ -32,16 +32,23 @@ public class Camera {
         for (int j = 0; j < imageHeight; j++) {
             Console.Error.Write($"\rScanlines remaining: {imageHeight - j} ");
             for (int i = 0; i < ImageWidth; i++) {
-                Vec3 pixelColor = new Vec3(0, 0, 0);
+                Color pixelColor = new Color(0, 0, 0);
                 for (int sample = 0; sample < SamplesPerPixel; sample++) {
                     Ray r = GetRay(i, j);
                     pixelColor += RayColor(r, MaxDepth, world);
                 }
-                WriteColor(Console.Out, pixelSamplesScale * pixelColor);
+
+                // Scale the color by the number of samples per pixel
+                Color finalColor = pixelSamplesScale * pixelColor;
+
+                // Convert the Vec3 to Color and write to the output
+                Color color = new Color(finalColor.R, finalColor.G, finalColor.B);
+                Color.WriteColor(Console.Out, color);
             }
         }
         Console.Error.WriteLine("\rDone.");
     }
+
 
     private void Initialize() {
         imageHeight = (int)(ImageWidth / AspectRatio);
@@ -89,27 +96,32 @@ public class Camera {
         return center + (p.X * defocusDiskU) + (p.Y * defocusDiskV);
     }
 
-    private Vec3 RayColor(Ray r, int depth, Hittable world) {
-        if (depth <= 0) return new Vec3(0, 0, 0);
+    private Color RayColor(Ray r, int depth, Hittable world) {
+
+        if (depth <= 0) return new Color(0, 0, 0);
 
         HitRecord rec;
+
         if (world.Hit(r, new Bounds(0.001, double.PositiveInfinity), out rec)) {
+
             Ray scattered;
-            Vec3 attenuation;
-            if (rec.Material.Scatter(r, rec, out attenuation, out scattered)) {
+            Color attenuation;
+
+            if (rec.Mat.Scatter(r, rec, out attenuation, out scattered)) {
                 return attenuation * RayColor(scattered, depth - 1, world);
             }
-            return new Vec3(0, 0, 0);
+            return new Color(0, 0, 0);
         }
 
         Vec3 unitDirection = Vec3.UnitVector(r.Direction);
         double a = 0.5 * (unitDirection.Y + 1.0);
-        return (1.0 - a) * new Vec3(1.0, 1.0, 1.0) + a * new Vec3(0.5, 0.7, 1.0);
+        return (1.0 - a) * new Color(1.0, 1.0, 1.0) + a * new Color(0.5, 0.7, 1.0);
     }
 
     private double DegreesToRadians(double degrees) {
         return degrees * (Math.PI / 180.0);
     }
+    
 
     private double RandomDouble() {
         Random rand = new Random();
