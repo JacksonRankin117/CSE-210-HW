@@ -1,21 +1,25 @@
+using System;
 using System.Collections.Generic;
 
-public class HittableList : IHittable
+public class HittableList : Hittable  // Fixed: Implementing interface
 {
-    private List<IHittable> Objects = new List<IHittable>();
+    private List<Hittable> objects = new List<Hittable>(); // Fixed: Correct list type
 
-    public void Add(IHittable obj) => Objects.Add(obj);
-    public void Clear() => Objects.Clear();
+    public HittableList() { }
+    public HittableList(Hittable obj) { Add(obj); }
 
-    public bool Hit(Ray ray, float tMin, float tMax, out HitRecord rec)
+    public void Clear() => objects.Clear();
+    public void Add(Hittable obj) => objects.Add(obj);
+
+    public bool Hit(Ray r, Bounds rayT, out HitRecord rec)
     {
-        rec = new HitRecord();
+        rec = default;
         bool hitAnything = false;
-        float closestSoFar = tMax;
+        double closestSoFar = rayT.Max;
 
-        foreach (var obj in Objects)
+        foreach (var obj in objects)
         {
-            if (obj.Hit(ray, tMin, closestSoFar, out HitRecord tempRec))
+            if (obj.Hit(r, new Bounds(rayT.Min, closestSoFar), out HitRecord tempRec)) // Fixed: Bounds instead of Interval
             {
                 hitAnything = true;
                 closestSoFar = tempRec.T;
@@ -24,5 +28,17 @@ public class HittableList : IHittable
         }
 
         return hitAnything;
+    }
+}
+
+public struct Bounds  // Changed from Interval to avoid conflicts
+{
+    public double Min { get; }
+    public double Max { get; }
+
+    public Bounds(double min, double max)
+    {
+        Min = min;
+        Max = max;
     }
 }

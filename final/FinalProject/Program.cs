@@ -1,108 +1,88 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
 
 class Program
 {
     static void Main()
     {
-        // Image settings
-        double aspectRatio = 16.0 / 9.0;
-        int imageWidth = 400;
+        HittableList world = new HittableList();
 
-        // Calculate image height and ensure it's at least 1
-        int imageHeight = (int)(imageWidth / aspectRatio);
-        imageHeight = (imageHeight < 1) ? 1 : imageHeight;
+        Lambertian groundMaterial = new Lambertian(new Color(0, 0.6, 0));
+        world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, groundMaterial));
 
-        // Camera settings
-        double focalLength = 1.0;
-        double viewportHeight = 2.0;
-        float viewportWidth = viewportHeight * ((float)imageWidth / imageHeight);
-        point3 cameraCenter = new point3(0, 0, 0);
+        // Adds a random scattering of spheres.
+        // There will be a mix of diffuse, metal, and glass spheres.
+        int sphereLimit = 11;
+        Random rand = new Random();
 
-        // Calculate viewport vectors
-        Vec3 viewportU = new Vec3(viewportWidth, 0, 0);
-        Vec3 viewportV = new Vec3(0, -viewportHeight, 0);
-
-        // Pixel delta calculations
-        Vec3 pixelDeltaU = viewportU / imageWidth;
-        Vec3 pixelDeltaV = viewportV / imageHeight;
-
-        // Compute upper-left pixel location
-        point3 viewportUpperLeft = cameraCenter - new Vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
-        point3 pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
-
-        // Output file path
-        string filePath = "/Users/jacksonrankin/Desktop/Student/Four/CSE 210/CSE-210-HW/final/FinalProject/output.ppm";
-
-        using (StreamWriter writer = new StreamWriter(filePath))
+        for (int a = -sphereLimit; a < sphereLimit; a++)
         {
-            // Write PPM header
-            writer.WriteLine($"P3\n{imageWidth} {imageHeight}\n255");
-
-            // Render loop
-            for (int j = 0; j < imageHeight; j++)
+            for (int b = -sphereLimit; b < sphereLimit; b++)
             {
-                Console.Write($"\rScanlines remaining: {imageHeight - j} ");
-                Console.Out.Flush();
+                double chooseMat = rand.NextDouble();
+                Vec3 center = new Vec3(
+                    a + 0.9 * rand.NextDouble(),
+                    0.2,
+                    b + 0.9 * rand.NextDouble()
+                );
 
-                for (int i = 0; i < imageWidth; i++)
+                if ((center - new Vec3(4, 0.2, 0)).Length > 0.33)
                 {
-                    point3 pixelCenter = pixel00Loc + (i * pixelDeltaU) + (j * pixelDeltaV);
-                    Vec3 rayDirection = pixelCenter - cameraCenter;
-                    Ray r = new Ray(cameraCenter, rayDirection);
+                    Material sphereMaterial;
 
-                    Color pixelColor = RayColor(r);
-                    pixelColor.WriteColor(writer);
+                    if (chooseMat < 0.33)
+                    {
+                        // Diffuse
+                        Color albedo = Vec3.Random() * Vec3.Random();
+                        sphereMaterial = new Lambertian(albedo);
+                        world.Add(new Sphere(center, 0.2, sphereMaterial));
+                    }
+                    else if (chooseMat < 0.66)
+                    {
+                        // Metal
+                        Color albedo = Vec3.Random(0.5, 1);
+                        double fuzz = rand.NextDouble() * 0.5;
+                        sphereMaterial = new Metal(albedo, fuzz);
+                        world.Add(new Sphere(center, 0.2, sphereMaterial));
+                    }
+                    else
+                    {
+                        // Glass
+                        sphereMaterial = new Dielectric(1.5);
+                        world.Add(new Sphere(center, 0.2, sphereMaterial));
+                    }
                 }
             }
         }
 
-        Console.WriteLine("\nDone.");
+        // Large glass sphere
+        Dielectric material1 = new Dielectric(1.5);
+        world.Add(new Sphere(new Vec3(0, 1, -3), 1.0, material1));
+
+        // Large matte sphere
+        Lambertian material2 = new Lambertian(new Color(0.4, 0.2, 0.1));
+        world.Add(new Sphere(new Vec3(0, 1, 0), 1.0, material2));
+
+        // Large metal sphere
+        Metal material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
+        world.Add(new Sphere(new Vec3(0, 1, 3), 1.0, material3));
+
+        Camera cam = new Camera
+        {
+            AspectRatio = 16.0 / 9.0,
+            ImageWidth = 1200,
+            SamplesPerPixel = 10,
+            MaxDepth = 20,
+
+            Vfov = 20,
+            LookFrom = new Vec3(13, 2, -4),
+            LookAt = new Vec3(0, 0, 0),
+            Vup = new Vec3(0, 1, 0),
+
+            DefocusAngle = 0.6,
+            FocusDist = 10.0
+        };
+
+        cam.Render(world);
     }
-
-    static Color RayColor(Ray r)
-    {
-        Vec3 unitDirection = Vec3.UnitVector(r.Direction);
-        double a = 0.5 * (unitDirection.Y + 1.0);
-        return (1.0 - a) * new Color(1.0, 1.0, 1.0) + a * new Color(0.5, 0.7, 1.0);
-    }
-}
-
-public class point3
-{
-    public double X, Y, Z;
-
-    public point3(double x, double y, double z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-    }
-
-    public static point3 operator +(point3 p1, Vec3 v) => new point3(p1.X + v.X, p1.Y + v.Y, p1.Z + v.Z);
-    public static point3 operator -(point3 p1, Vec3 v) => new point3(p1.X - v.X, p1.Y - v.Y, p1.Z - v.Z);
-}
-
-
-public class Color
-{
-    public double X, Y, Z;
-
-    public Color(double r, double g, double b)
-    {
-        X = r;
-        Y = g;
-        Z = b;
-    }
-
-    public void WriteColor(StreamWriter writer)
-    {
-        int rByte = (int)(255.999 * X);
-        int gByte = (int)(255.999 * Y);
-        int bByte = (int)(255.999 * Z);
-        writer.WriteLine($"{rByte} {gByte} {bByte}");
-    }
-
-    public static Color operator +(Color c1, Color c2) => new Color(c1.X + c2.X, c1.Y + c2.Y, c1.Z + c2.Z);
-    public static Color operator *(double t, Color c) => new Color(t * c.X, t * c.Y, t * c.Z);
 }

@@ -1,42 +1,47 @@
 using System;
 
-public class Sphere : IHittable
+public class Sphere : HittableList
 {
-    public Vec3 Center { get; }
-    public float Radius { get; }
+    private readonly Vec3 center;
+    private readonly double radius;
+    private readonly Material mat;
 
-    public Sphere(Vec3 center, float radius)
+    public Sphere(Vec3 center, double radius, Material mat)
     {
-        Center = center;
-        Radius = radius;
+        this.center = center;
+        this.radius = Math.Max(0, radius);
+        this.mat = mat;
     }
 
-    public bool Hit(Ray ray, float tMin, float tMax, out HitRecord rec)
+    public bool Hit(Ray r, Interval rayT, out HitRecord rec)
     {
         rec = new HitRecord();
-        Vec3 oc = ray.Origin - Center;
-        float a = Vec3.Dot(ray.Direction, ray.Direction);
-        float halfB = Vec3.Dot(oc, ray.Direction);
-        float c = Vec3.Dot(oc, oc) - Radius * Radius;
-        float discriminant = halfB * halfB - a * c;
-        
+        Vec3 oc = center - r.Origin;
+        double a = r.Direction.LengthSquared();
+        double h = Vec3.Dot(r.Direction, oc);
+        double c = oc.LengthSquared() - radius * radius;
+
+        double discriminant = h * h - a * c;
         if (discriminant < 0)
             return false;
-        
-        float sqrtd = (float)Math.Sqrt(discriminant);
-        float root = (-halfB - sqrtd) / a;
-        
-        if (root < tMin || root > tMax)
+
+        double sqrtd = Math.Sqrt(discriminant);
+
+        // Find the nearest root that lies in the acceptable range.
+        double root = (h - sqrtd) / a;
+        if (!rayT.Surrounds(root))
         {
-            root = (-halfB + sqrtd) / a;
-            if (root < tMin || root > tMax)
+            root = (h + sqrtd) / a;
+            if (!rayT.Surrounds(root))
                 return false;
         }
-        
+
         rec.T = root;
-        rec.Point = ray.At(rec.T);
-        rec.SetFaceNormal(ray, (rec.Point - Center) / Radius);
-        
+        rec.P = r.At(rec.T);
+        Vec3 outwardNormal = (rec.P - center) / radius;
+        rec.SetFaceNormal(r, outwardNormal);
+        rec.Mat = mat;
+
         return true;
     }
 }
