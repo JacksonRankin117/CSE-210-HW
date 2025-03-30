@@ -16,32 +16,37 @@ public class Sphere : HittableList
     public bool Hit(Ray r, Interval rayT, out HitRecord rec)
     {
         rec = new HitRecord();
-        Vec3 oc = center - r.Origin;
-        double a = r.Direction.LengthSquared();
-        double h = Vec3.Dot(r.Direction, oc);
-        double c = oc.LengthSquared() - radius * radius;
+        Vec3 oc = r.Origin - center;  // Direction from ray origin to sphere center
+        double a = r.Direction.LengthSquared();  // Length squared of ray direction
+        double h = Vec3.Dot(r.Direction, oc);    // Dot product of ray direction and oc
+        double c = oc.LengthSquared() - radius * radius; // Distance from ray origin to sphere center minus radius squared
 
-        double discriminant = h * h - a * c;
-        if (discriminant < 0)
-            return false;
+        double discriminant = h * h - a * c;  // The discriminant of the quadratic equation
+        Console.WriteLine($"Discriminant: {discriminant}");
 
-        double sqrtd = Math.Sqrt(discriminant);
+        double sqrtd = Math.Sqrt(discriminant);  // Square root of discriminant
+        double root = (h - sqrtd) / a;  // First root calculation
+        Console.WriteLine($"Root 1: {root}");
 
-        // Find the nearest root that lies in the acceptable range.
-        double root = (h - sqrtd) / a;
         if (!rayT.Surrounds(root))
         {
-            root = (h + sqrtd) / a;
+            root = (h + sqrtd) / a;  // Second root calculation
+            Console.WriteLine($"Root 2: {root}");
+
             if (!rayT.Surrounds(root))
-                return false;
+            {
+                Console.WriteLine("Both roots are outside the acceptable range.");
+                return false;  // Both roots are outside the acceptable t-range
+            }
         }
 
         rec.T = root;
-        rec.P = r.At(rec.T);
-        Vec3 outwardNormal = (rec.P - center) / radius;
-        rec.SetFaceNormal(r, outwardNormal);
-        rec.Mat = mat;
+        rec.P = r.At(rec.T);  // The point of intersection on the sphere
+        Vec3 outwardNormal = (rec.P - center) / radius;  // Normal at the point of intersection
+        rec.SetFaceNormal(r, outwardNormal);  // Determine the correct normal direction based on ray's direction
+        rec.Mat = mat;  // Assign material to hit record
 
-        return true;
+        Console.WriteLine($"Hit point: {rec.P}");
+        return true;  // Return true if an intersection occurred
     }
 }

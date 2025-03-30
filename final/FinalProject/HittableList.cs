@@ -8,7 +8,7 @@ public class HittableList : Hittable  // Fixed: Implementing interface
     public HittableList() { }
     public HittableList(Hittable obj) { Add(obj); }
 
-    public void Clear() => objects.Clear();
+    //public void Clear() => objects.Clear();
     public void Add(Hittable obj) => objects.Add(obj);
 
     public bool Hit(Ray r, Bounds rayT, out HitRecord rec)

@@ -90,7 +90,7 @@ public class Vec3 {
         {
             var p = Random(-1, 1);
             double lensq = p.LengthSquared();
-            if (lensq > 1e-160 && lensq <= 1.0)
+            if (lensq > 1e-10 && lensq <= 1.0) // original line: if (lensq > 1e-10 && lensq <= 1.0)
                 return p / Math.Sqrt(lensq);
         }
     }

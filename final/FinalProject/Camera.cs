@@ -14,7 +14,7 @@ public class Camera {
     public double DefocusAngle { get; set; } = 0;
     public double FocusDist { get; set; } = 10;
 
-    private int imageHeight;
+    private int ImageHeight;
     private double pixelSamplesScale;
     private Vec3 center;
     private Vec3 pixel00Loc;
@@ -24,42 +24,42 @@ public class Camera {
     private Vec3 defocusDiskU;
     private Vec3 defocusDiskV;
 
-    public void Render(Hittable world) {
+    public void Render(Hittable world, string filename) {
         Initialize();
 
-        Console.WriteLine($"P3\n{ImageWidth} {imageHeight}\n255\n");
+        using (StreamWriter writer = new StreamWriter(filename)) {
+            writer.WriteLine($"P3\n{ImageWidth} {ImageHeight}\n255");
 
-        for (int j = 0; j < imageHeight; j++) {
-            Console.Error.Write($"\rScanlines remaining: {imageHeight - j} ");
-            for (int i = 0; i < ImageWidth; i++) {
-                Color pixelColor = new Color(0, 0, 0);
-                for (int sample = 0; sample < SamplesPerPixel; sample++) {
-                    Ray r = GetRay(i, j);
-                    pixelColor += RayColor(r, MaxDepth, world);
+            for (int j = 0; j < ImageHeight; j++) {
+                Console.Error.Write($"\rScanlines remaining: {ImageHeight - j} ");
+                for (int i = 0; i < ImageWidth; i++) {
+                    Color pixelColor = new Color(0, 0, 0);
+                    for (int sample = 0; sample < SamplesPerPixel; sample++) {
+                        Ray r = GetRay(i, j);
+                        pixelColor += RayColor(r, MaxDepth, world);
+                    }
+
+                    // Scale the color by the number of samples per pixel
+                    Color finalColor = pixelSamplesScale * pixelColor;
+
+                    // Write color to file
+                    Color.WriteColor(writer, finalColor);
                 }
-
-                // Scale the color by the number of samples per pixel
-                Color finalColor = pixelSamplesScale * pixelColor;
-
-                // Convert the Vec3 to Color and write to the output
-                Color color = new Color(finalColor.R, finalColor.G, finalColor.B);
-                Color.WriteColor(Console.Out, color);
             }
         }
-        Console.Error.WriteLine("\rDone.");
+        Console.Error.WriteLine("\rDone.                     ");
     }
 
-
     private void Initialize() {
-        imageHeight = (int)(ImageWidth / AspectRatio);
-        imageHeight = Math.Max(imageHeight, 1);
+        ImageHeight = (int)(ImageWidth / AspectRatio);
+        ImageHeight = Math.Max(ImageHeight, 1);
         pixelSamplesScale = 1.0 / SamplesPerPixel;
         center = LookFrom;
 
         double theta = DegreesToRadians(Vfov);
         double h = Math.Tan(theta / 2);
         double viewportHeight = 2 * h * FocusDist;
-        double viewportWidth = viewportHeight * ((double)ImageWidth / imageHeight);
+        double viewportWidth = viewportHeight * ((double)ImageWidth / ImageHeight);
 
         w = Vec3.UnitVector(LookFrom - LookAt);
         u = Vec3.UnitVector(Vec3.Cross(Vup, w));
@@ -69,7 +69,7 @@ public class Camera {
         Vec3 viewportV = viewportHeight * -v;
 
         pixelDeltaU = viewportU / ImageWidth;
-        pixelDeltaV = viewportV / imageHeight;
+        pixelDeltaV = viewportV / ImageHeight;
 
         Vec3 viewportUpperLeft = center - (FocusDist * w) - viewportU / 2 - viewportV / 2;
         pixel00Loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
@@ -103,6 +103,8 @@ public class Camera {
         HitRecord rec;
 
         if (world.Hit(r, new Bounds(0.001, double.PositiveInfinity), out rec)) {
+            // Debug output to track when a ray hits an object
+            Console.WriteLine($"Hit at {rec.P}");
 
             Ray scattered;
             Color attenuation;
@@ -117,6 +119,7 @@ public class Camera {
         double a = 0.5 * (unitDirection.Y + 1.0);
         return (1.0 - a) * new Color(1.0, 1.0, 1.0) + a * new Color(0.5, 0.7, 1.0);
     }
+
 
     private double DegreesToRadians(double degrees) {
         return degrees * (Math.PI / 180.0);

@@ -2,6 +2,8 @@ using System;
 
 public struct Color
 {
+    public static Random rand = new Random();
+
     public double R { get; }
     public double G { get; }
     public double B { get; }
@@ -32,27 +34,25 @@ public struct Color
         // Write out the pixel color components
         writer.WriteLine($"{rByte} {gByte} {bByte}");
     }
-    public static Vec3 operator -(Vec3 v) => new Vec3(-v.E[0], -v.E[1], -v.E[2]);
-
-    public double this[int i] {
-        get => E[i];
-        set => E[i] = value;
+    public static Color operator -(Color v) {
+        return new Color(-v.R, -v.G, -v.B);
     }
 
+    // Vector operator override
     public static Color operator +(Color u, Color v) {
-        return new Color(u.E[0] + v.E[0], u.E[1] + v.E[1], u.E[2] + v.E[2]);
+        return new Color(u.R + v.R, u.G + v.G, u.B + v.B);
     }
 
     public static Color operator -(Color u, Color v) {
-        return new Vec3(u.E[0] - v.E[0], u.E[1] - v.E[1], u.E[2] - v.E[2]);
+        return new Color(u.R - v.R, u.G - v.G, u.B - v.B);
     }
 
     public static Color operator*(Color u, Color v) {
-    return vec3(u.e[0] * v.e[0], u.e[1] * v.e[1], u.e[2] * v.e[2]);
-}
+        return new Color(u.R * v.R, u.G * v.G, u.B * v.B);
+    }
 
     public static Color operator *(Color v, double t) {
-        return new Color(v.E[0] * t, v.E[1] * t, v.E[2] * t);
+        return new Color(v.R * t, v.G * t, v.B * t);
     }
 
     public static Color operator *(double t, Color v) {
@@ -64,12 +64,12 @@ public struct Color
     }
 
     public static Color Random() {
-        return new Vec3(rand.NextDouble(), rand.NextDouble(), rand.NextDouble());
+        return new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble());
     }
 
     public static Color Random(double min, double max) {
         // Ensure that the random values are scaled between min and max
-        return new Vec3(
+        return new Color(
             min + (max - min) * rand.NextDouble(),
             min + (max - min) * rand.NextDouble(),
             min + (max - min) * rand.NextDouble()
