@@ -1,6 +1,4 @@
-using System;
-
-public class Sphere : HittableList
+public class Sphere : Hittable
 {
     private readonly Vec3 center;
     private readonly double radius;
@@ -9,44 +7,46 @@ public class Sphere : HittableList
     public Sphere(Vec3 center, double radius, Material mat)
     {
         this.center = center;
-        this.radius = Math.Max(0, radius);
+        this.radius = Math.Max(0, radius); // Ensure the radius is non-negative
         this.mat = mat;
     }
 
-    public bool Hit(Ray r, Interval rayT, out HitRecord rec)
+    public bool Hit(Ray r, Interval ray_t, out HitRecord rec)
     {
-        rec = new HitRecord();
-        Vec3 oc = r.Origin - center;  // Direction from ray origin to sphere center
-        double a = r.Direction.LengthSquared();  // Length squared of ray direction
-        double h = Vec3.Dot(r.Direction, oc);    // Dot product of ray direction and oc
-        double c = oc.LengthSquared() - radius * radius; // Distance from ray origin to sphere center minus radius squared
+        rec = new HitRecord(); // Initialize rec to avoid uninitialized reference error
+        
+        Vec3 oc = r.Origin - center;  // Vector from ray origin to sphere center
+        double a = r.Direction.LengthSquared();  // Direction squared (dot product of direction with itself)
+        double h = Vec3.Dot(oc, r.Direction);  // Half of the dot product of the ray's origin to sphere center with the direction
+        double c = oc.LengthSquared() - radius * radius;  // Distance from ray origin to sphere center squared minus sphere's radius squared
 
-        double discriminant = h * h - a * c;  // The discriminant of the quadratic equation
-        Console.WriteLine($"Discriminant: {discriminant}");
+        double discriminant = h * h - a * c;  // Discriminant of the quadratic equation
 
-        double sqrtd = Math.Sqrt(discriminant);  // Square root of discriminant
-        double root = (h - sqrtd) / a;  // First root calculation
-        Console.WriteLine($"Root 1: {root}");
-
-        if (!rayT.Surrounds(root))
+        if (discriminant < 0)  // If the discriminant is negative, no intersection
         {
-            root = (h + sqrtd) / a;  // Second root calculation
-            Console.WriteLine($"Root 2: {root}");
+            return false;
+        }
 
-            if (!rayT.Surrounds(root))
+        double sqrtd = Math.Sqrt(discriminant);  // Square root of the discriminant
+
+        // Find the nearest root that lies within the acceptable t range
+        double root = (h - sqrtd) / a;  
+        if (!ray_t.Contains(root))  // Check if root is within the bounds
+        {
+            root = (h + sqrtd) / a;  // Check the second root
+            if (!ray_t.Contains(root))  // Check if the second root is within bounds
             {
-                Console.WriteLine("Both roots are outside the acceptable range.");
-                return false;  // Both roots are outside the acceptable t-range
+                return false;
             }
         }
 
+        // Set the hit record
         rec.T = root;
-        rec.P = r.At(rec.T);  // The point of intersection on the sphere
-        Vec3 outwardNormal = (rec.P - center) / radius;  // Normal at the point of intersection
-        rec.SetFaceNormal(r, outwardNormal);  // Determine the correct normal direction based on ray's direction
-        rec.Mat = mat;  // Assign material to hit record
+        rec.P = r.At(rec.T);  // Calculate the intersection point
+        Vec3 outwardNormal = (rec.P - center) / radius;  // Calculate the normal at the intersection
+        rec.SetFaceNormal(r, outwardNormal);  // Set the normal, handling front/back face
+        rec.Mat = mat;  // Set the material
 
-        Console.WriteLine($"Hit point: {rec.P}");
-        return true;  // Return true if an intersection occurred
+        return true;
     }
 }

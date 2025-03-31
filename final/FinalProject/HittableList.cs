@@ -8,25 +8,25 @@ public class HittableList : Hittable  // Fixed: Implementing interface
     public HittableList() { }
     public HittableList(Hittable obj) { Add(obj); }
 
-    //public void Clear() => objects.Clear();
-    public void Add(Hittable obj) => objects.Add(obj);
+    public void Add(Hittable obj)
+    {
+        objects.Add(obj);
+    }
 
-    public bool Hit(Ray r, Bounds rayT, out HitRecord rec)
+    public bool Hit(Ray r, Interval rayT, out HitRecord rec)
     {
         rec = default;
         bool hitAnything = false;
         double closestSoFar = rayT.Max;
 
-        foreach (var obj in objects)
+        foreach (Hittable obj in objects)
         {
-            if (obj.Hit(r, new Bounds(rayT.Min, closestSoFar), out HitRecord tempRec)) // Fixed: Bounds instead of Interval
-            {
+            if (obj.Hit(r, new Interval(rayT.Min, closestSoFar), out HitRecord tempRec)) {
                 hitAnything = true;
                 closestSoFar = tempRec.T;
                 rec = tempRec;
             }
         }
-
         return hitAnything;
     }
 }

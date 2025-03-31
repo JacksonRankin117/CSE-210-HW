@@ -1,6 +1,6 @@
 using System;
 
-public struct Interval
+public class Interval
 {
     public double Min { get; }
     public double Max { get; }

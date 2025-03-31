@@ -19,5 +19,5 @@ public class HitRecord
 
 public interface Hittable  // Fixed: Renamed Hittable to IHittable for clarity
 {
-    bool Hit(Ray r, Bounds rayT, out HitRecord rec); // Fixed: Uses Bounds
+    bool Hit(Ray r, Interval rayT, out HitRecord rec);
 }
