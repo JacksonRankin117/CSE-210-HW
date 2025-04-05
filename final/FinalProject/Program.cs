@@ -1,7 +1,15 @@
+using System;
+using System.Diagnostics; // Import for Stopwatch
+
 class Program
 {
     static void Main()
     {
+        // Create a new Stopwatch instance to track render time, and start it
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        
+        // Create the scene and world
         HittableList world = new HittableList();
         Random rand = new Random();
 
@@ -56,17 +64,23 @@ class Program
         {
             AspectRatio     = 21.0 / 9.0,
             ImageWidth      = 5040,
-            SamplesPerPixel = 20,
-            MaxDepth        = 50,
+            SamplesPerPixel = 50,
+            MaxDepth        = 25,
             Vfov            = 20,
             LookFrom        = new Vec3(13, 2, -4),
             LookAt          = new Vec3(0, 0.5, 0),
             Vup             = new Vec3(0, 1, 0),
             DefocusAngle    = 0.6,
-            FocusDist       = 10
+            FocusDist       = (new Vec3(13, 2, -4) - new Vec3(0, 0.5, 0)).Length()
         };
 
-        // Render the scene and save to file
-        cam.Render(world, "tracer_bad.ppm");
+        // Render the scene, and save it to a file
+        cam.Render(world, "FinishedProduct5K.ppm");
+
+        // Stop the stopwatch after the render is complete
+        stopwatch.Stop();
+
+        // Output the time taken to render
+        Console.WriteLine($"Render time: {stopwatch.Elapsed.TotalSeconds} seconds");
     }
 }

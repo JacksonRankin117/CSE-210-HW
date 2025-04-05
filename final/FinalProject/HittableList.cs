@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.AccessControl;
 
-public class HittableList : Hittable  // Fixed: Implementing interface
+public class HittableList : Hittable
 {
     private List<Hittable> objects = new List<Hittable>();
 

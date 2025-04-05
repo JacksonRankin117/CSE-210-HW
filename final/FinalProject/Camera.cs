@@ -88,9 +88,6 @@ public class Camera {
         Vec3 rayOrigin = (DefocusAngle <= 0) ? center : DefocusDiskSample();
         Vec3 rayDirection = pixelSample - rayOrigin;
 
-        // Debugging
-        // Console.WriteLine($"Ray Origin: {rayOrigin}, Ray Direction: {rayDirection}");
-
         return new Ray(rayOrigin, rayDirection);
     }
 
