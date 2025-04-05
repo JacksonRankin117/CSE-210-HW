@@ -62,10 +62,10 @@ class Program
         // Camera setup
         Camera cam = new Camera
         {
-            AspectRatio     = 21.0 / 9.0,
-            ImageWidth      = 5040,
-            SamplesPerPixel = 50,
-            MaxDepth        = 25,
+            AspectRatio     = 16.0 / 9.0,
+            ImageWidth      = 1280,
+            SamplesPerPixel = 20,
+            MaxDepth        = 10,
             Vfov            = 20,
             LookFrom        = new Vec3(13, 2, -4),
             LookAt          = new Vec3(0, 0.5, 0),
@@ -75,7 +75,7 @@ class Program
         };
 
         // Render the scene, and save it to a file
-        cam.Render(world, "FinishedProduct5K.ppm");
+        cam.Render(world, "FinishedProduct.ppm");
 
         // Stop the stopwatch after the render is complete
         stopwatch.Stop();
