@@ -16,6 +16,7 @@ public class Camera {
 
     private int ImageHeight;
     private double pixelSamplesScale;
+    private static Random rand = new Random();
     private Vec3 center;
     private Vec3 pixel00Loc;
     private Vec3 pixelDeltaU;
@@ -82,23 +83,26 @@ public class Camera {
 
 
     private Ray GetRay(int i, int j) {
-
         Vec3 offset = SampleSquare();
         Vec3 pixelSample = pixel00Loc + ((i + offset.X) * pixelDeltaU) + ((j + offset.Y) * pixelDeltaV);
         Vec3 rayOrigin = (DefocusAngle <= 0) ? center : DefocusDiskSample();
         Vec3 rayDirection = pixelSample - rayOrigin;
 
+        // Debugging
+        // Console.WriteLine($"Ray Origin: {rayOrigin}, Ray Direction: {rayDirection}");
+
         return new Ray(rayOrigin, rayDirection);
     }
 
+
+
     private Vec3 SampleSquare() {
 
-        Vec3 offset = new Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
-
-        return offset;
+        return new Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0);
     }
 
     private Vec3 DefocusDiskSample() {
+        
         Vec3 p = RandomInUnitDisk();
 
         return center + (p.X * defocusDiskU) + (p.Y * defocusDiskV);
@@ -128,23 +132,18 @@ public class Camera {
         return backgroundColor;
     }
 
-
-
     private double DegreesToRadians(double degrees) {
         return degrees * (Math.PI / 180.0);
     }
     
 
     private double RandomDouble() {
-        Random rand = new Random();
         double randomValue = rand.NextDouble();
 
         return randomValue;
     }
 
     private Vec3 RandomInUnitDisk() {
-
-        Random rand = new Random();
 
         while (true) {
 

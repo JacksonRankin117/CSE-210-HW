@@ -46,7 +46,7 @@ public class Metal : Material
 
     public override bool Scatter(Ray rIn, HitRecord rec, out Color attenuation, out Ray scattered)
     {
-        var reflected = Vec3.Reflect(rIn.Direction, rec.Normal);
+        Vec3 reflected = Vec3.Reflect(rIn.Direction, rec.Normal);
         reflected = Vec3.UnitVector(reflected) + fuzz * Vec3.RandomUnitVector();
         scattered = new Ray(rec.P, reflected);
         attenuation = albedo;
@@ -68,12 +68,12 @@ public class Dielectric : Material
         attenuation = new Color(1.0, 1.0, 1.0);
         double ri = rec.FrontFace ? (1.0 / refractionIndex) : refractionIndex;
 
-        var unitDirection = Vec3.UnitVector(rIn.Direction);
+        Vec3 unitDirection = Vec3.UnitVector(rIn.Direction);
         double cosTheta = Math.Min(Vec3.Dot(-unitDirection, rec.Normal), 1.0);
         double sinTheta = Math.Sqrt(1.0 - cosTheta * cosTheta);
 
         bool cannotRefract = ri * sinTheta > 1.0;
-        var direction = default(Vec3);
+        Vec3 direction = default(Vec3);
 
         if (cannotRefract || Reflectance(cosTheta, ri) > RTWeekend.RandomDouble())
             direction = Vec3.Reflect(unitDirection, rec.Normal);

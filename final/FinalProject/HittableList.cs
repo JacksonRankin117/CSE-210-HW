@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 
 public class HittableList : Hittable  // Fixed: Implementing interface
 {
-    private List<Hittable> objects = new List<Hittable>(); // Fixed: Correct list type
+    private List<Hittable> objects = new List<Hittable>();
 
     public HittableList() { }
     public HittableList(Hittable obj) { Add(obj); }
+
+    public void clear() { objects.Clear(); }
 
     public void Add(Hittable obj)
     {
@@ -28,17 +31,5 @@ public class HittableList : Hittable  // Fixed: Implementing interface
             }
         }
         return hitAnything;
-    }
-}
-
-public struct Bounds  // Changed from Interval to avoid conflicts
-{
-    public double Min { get; }
-    public double Max { get; }
-
-    public Bounds(double min, double max)
-    {
-        Min = min;
-        Max = max;
     }
 }

@@ -13,28 +13,26 @@ public class Sphere : Hittable
 
     public bool Hit(Ray r, Interval ray_t, out HitRecord rec)
     {
-        rec = new HitRecord(); // Initialize rec to avoid uninitialized reference error
-        
+        rec = new HitRecord();
+
         Vec3 oc = r.Origin - center;  // Vector from ray origin to sphere center
-        double a = r.Direction.LengthSquared();  // Direction squared (dot product of direction with itself)
-        double h = Vec3.Dot(oc, r.Direction);  // Half of the dot product of the ray's origin to sphere center with the direction
-        double c = oc.LengthSquared() - radius * radius;  // Distance from ray origin to sphere center squared minus sphere's radius squared
+        double a = r.Direction.LengthSquared();  // Direction squared
+        double b = 2.0 * Vec3.Dot(oc, r.Direction);  // Standard quadratic equation term
+        double c = oc.LengthSquared() - radius * radius;  // Sphere equation
 
-        double discriminant = h * h - a * c;  // Discriminant of the quadratic equation
-
+        double discriminant = b * b - 4 * a * c;  // Quadratic discriminant
         if (discriminant < 0)  // If the discriminant is negative, no intersection
         {
             return false;
         }
 
-        double sqrtd = Math.Sqrt(discriminant);  // Square root of the discriminant
-
-        // Find the nearest root that lies within the acceptable t range
-        double root = (h - sqrtd) / a;  
+        double sqrtd = Math.Sqrt(discriminant);
+        double root = (-b - sqrtd) / (2.0 * a);  // Closest root
+        
         if (!ray_t.Contains(root))  // Check if root is within the bounds
         {
-            root = (h + sqrtd) / a;  // Check the second root
-            if (!ray_t.Contains(root))  // Check if the second root is within bounds
+            root = (-b + sqrtd) / (2.0 * a);  // Try the second root
+            if (!ray_t.Contains(root))  // If it's also out of bounds, no hit
             {
                 return false;
             }
@@ -42,10 +40,10 @@ public class Sphere : Hittable
 
         // Set the hit record
         rec.T = root;
-        rec.P = r.At(rec.T);  // Calculate the intersection point
-        Vec3 outwardNormal = (rec.P - center) / radius;  // Calculate the normal at the intersection
-        rec.SetFaceNormal(r, outwardNormal);  // Set the normal, handling front/back face
-        rec.Mat = mat;  // Set the material
+        rec.P = r.At(rec.T);  // Calculate intersection point
+        Vec3 outwardNormal = (rec.P - center) / radius;  // Compute normal
+        rec.SetFaceNormal(r, outwardNormal);  // Adjust normal based on ray direction
+        rec.Mat = mat;  // Assign material
 
         return true;
     }

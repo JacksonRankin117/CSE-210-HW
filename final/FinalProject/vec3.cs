@@ -14,7 +14,6 @@ public struct Vec3
 
     public static Vec3 operator +(Vec3 a, Vec3 b) => new Vec3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
     public static Vec3 operator -(Vec3 a, Vec3 b) => new Vec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-    public static Vec3 operator *(Vec3 a, Vec3 b) => new Vec3(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
     public static Vec3 operator *(Vec3 a, double t) => new Vec3(a.X * t, a.Y * t, a.Z * t);
     public static Vec3 operator *(double t, Vec3 a) => new Vec3(a.X * t, a.Y * t, a.Z * t);
     public static Vec3 operator /(Vec3 a, double t) => new Vec3(a.X / t, a.Y / t, a.Z / t);
