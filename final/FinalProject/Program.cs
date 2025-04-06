@@ -28,8 +28,7 @@ class Program
         world.Add(new Sphere(new Vec3(0, 1, 3), 1, new Dielectric(1.5)));
 
         /*************** Adds a large number of small spheres ****************/
-
-        int lim = 12;
+        int lim = 10;
 
         for (int a = -lim; a < lim; a++)
         {
@@ -65,7 +64,7 @@ class Program
             AspectRatio     = 16.0 / 9.0,
             ImageWidth      = 1280,
             SamplesPerPixel = 20,
-            MaxDepth        = 10,
+            MaxDepth        = 15,
             Vfov            = 20,
             LookFrom        = new Vec3(13, 2, -4),
             LookAt          = new Vec3(0, 0.5, 0),
@@ -77,10 +76,14 @@ class Program
         // Render the scene, and save it to a file
         cam.Render(world, "FinishedProduct.ppm");
 
-        // Stop the stopwatch after the render is complete
+        // Stop the stopwatch after the render is complete, and records the duration
         stopwatch.Stop();
+        TimeSpan ts = stopwatch.Elapsed;
 
         // Output the time taken to render
-        Console.WriteLine($"Render time: {stopwatch.Elapsed.TotalSeconds} seconds");
+        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+        Console.WriteLine("This render took " + elapsedTime);
     }
 }

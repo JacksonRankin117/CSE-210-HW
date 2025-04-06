@@ -32,7 +32,8 @@ public class Camera {
             writer.WriteLine($"P3\n{ImageWidth} {ImageHeight}\n255");
 
             for (int j = 0; j < ImageHeight; j++) {
-                Console.Error.Write($"\rScanlines remaining: {ImageHeight - j} ");
+                Console.Error.Write($"\rProgress: {100*(j)/ImageHeight}% - Scanline {j} of {ImageHeight} ");
+                
                 for (int i = 0; i < ImageWidth; i++) {
                     Color pixelColor = new Color(0, 0, 0);
                     for (int sample = 0; sample < SamplesPerPixel; sample++) {
