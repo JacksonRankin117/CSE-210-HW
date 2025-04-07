@@ -61,16 +61,16 @@ class Program
         // Camera setup
         Camera _cam = new Camera
         {
-            _aspect_ratio     = 16.0 / 9.0,
-            _image_width      = 1280,
+            _aspect_ratio      = 16.0 / 9.0,
+            _image_width       = 1280,
             _samples_per_pixel = 20,
-            _max_depth        = 15,
-            _vert_fov            = 20,
-            _look_from        = new Vec3(13, 2, 0),
-            _look_at          = new Vec3(0, 0.5, 0),
-            _vert_up             = new Vec3(0, 1, 0),
-            _defocus_angle    = 0.6,
-            _focus_dist       = (new Vec3(13, 2, 0) - new Vec3(0, 0.5, 0)).Length()
+            _max_depth         = 15,
+            _vert_fov          = 20,
+            _look_from         = new Vec3(13, 2, 0),
+            _look_at           = new Vec3(0, 0.5, 0),
+            _vert_up           = new Vec3(0, 1, 0),
+            _defocus_angle     = 0.6,
+            _focus_dist        = (new Vec3(13, 2, 0) - new Vec3(0, 0.5, 0)).Length()
         };
 
         // Render the scene, and save it to a file
