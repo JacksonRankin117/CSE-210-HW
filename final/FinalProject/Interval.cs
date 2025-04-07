@@ -2,25 +2,25 @@ using System;
 
 public class Interval
 {
-    public double Min { get; }
-    public double Max { get; }
+    public double _min { get; }
+    public double _max { get; }
 
     public Interval(double min, double max)
     {
-        Min = min;
-        Max = max;
+        _min = min;
+        _max = max;
     }
 
-    public double Size() => Max - Min;
+    public double Size() => _max - _min;
 
-    public bool Contains(double x) => Min <= x && x <= Max;
+    public bool Contains(double x) => _min <= x && x <= _max;
 
-    public bool Surrounds(double x) => Min < x && x < Max;
+    public bool Surrounds(double x) => _min < x && x < _max;
 
     public double Clamp(double x)
     {
-        if (x < Min) return Min;
-        if (x > Max) return Max;
+        if (x < _min) return _min;
+        if (x > _max) return _max;
         return x;
     }
 

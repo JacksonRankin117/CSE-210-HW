@@ -1,24 +1,24 @@
 public class Sphere : Hittable
 {
-    private readonly Vec3 center;
-    private readonly double radius;
-    private readonly Material mat;
+    private readonly Vec3 _center;
+    private readonly double _radius;
+    private readonly Material _mat;
 
     public Sphere(Vec3 center, double radius, Material mat)
     {
-        this.center = center;
-        this.radius = Math.Max(0, radius); // Ensure the radius is non-negative
-        this.mat = mat;
+        this._center = center;
+        this._radius = Math.Max(0, radius); // Ensure the radius is non-negative
+        this._mat = mat;
     }
 
     public bool Hit(Ray r, Interval ray_t, out HitRecord rec)
     {
         rec = new HitRecord();
 
-        Vec3 oc = r.Origin - center;  // Vector from ray origin to sphere center
+        Vec3 oc = r.Origin - _center;  // Vector from ray origin to sphere center
         double a = r.Direction.LengthSquared();  // Direction squared
         double b = 2.0 * Vec3.Dot(oc, r.Direction);  // Standard quadratic equation term
-        double c = oc.LengthSquared() - radius * radius;  // Sphere equation
+        double c = oc.LengthSquared() - _radius * _radius;  // Sphere equation
 
         double discriminant = b * b - 4 * a * c;  // Quadratic discriminant
         if (discriminant < 0)  // If the discriminant is negative, no intersection
@@ -39,11 +39,11 @@ public class Sphere : Hittable
         }
 
         // Set the hit record
-        rec.T = root;
-        rec.P = r.At(rec.T);  // Calculate intersection point
-        Vec3 outwardNormal = (rec.P - center) / radius;  // Compute normal
+        rec._t = root;
+        rec._p = r.At(rec._t);  // Calculate intersection point
+        Vec3 outwardNormal = (rec._p - _center) / _radius;  // Compute normal
         rec.SetFaceNormal(r, outwardNormal);  // Adjust normal based on ray direction
-        rec.Mat = mat;  // Assign material
+        rec._mat = _mat;  // Assign material
 
         return true;
     }

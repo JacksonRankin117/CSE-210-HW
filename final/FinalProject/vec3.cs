@@ -2,45 +2,45 @@ using System;
 
 public struct Vec3
 {
-    public double X, Y, Z;
-    private static readonly Random Rand = new Random();
+    public double _x, _y, _z;
+    private static readonly Random _rand = new Random();
 
     public Vec3(double x, double y, double z)
     {
-        X = x;
-        Y = y;
-        Z = z;
+        _x = x;
+        _y = y;
+        _z = z;
     }
 
-    public static Vec3 operator +(Vec3 a, Vec3 b) => new Vec3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
-    public static Vec3 operator -(Vec3 a, Vec3 b) => new Vec3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-    public static Vec3 operator *(Vec3 a, double t) => new Vec3(a.X * t, a.Y * t, a.Z * t);
-    public static Vec3 operator *(double t, Vec3 a) => new Vec3(a.X * t, a.Y * t, a.Z * t);
-    public static Vec3 operator /(Vec3 a, double t) => new Vec3(a.X / t, a.Y / t, a.Z / t);
-    public static Vec3 operator -(Vec3 v) => new Vec3(-v.X, -v.Y, -v.Z);
+    public static Vec3 operator +(Vec3 a, Vec3 b) => new Vec3(a._x + b._x, a._y + b._y, a._z + b._z);
+    public static Vec3 operator -(Vec3 a, Vec3 b) => new Vec3(a._x - b._x, a._y - b._y, a._z - b._z);
+    public static Vec3 operator *(Vec3 a, double t) => new Vec3(a._x * t, a._y * t, a._z * t);
+    public static Vec3 operator *(double t, Vec3 a) => new Vec3(a._x * t, a._y * t, a._z * t);
+    public static Vec3 operator /(Vec3 a, double t) => new Vec3(a._x / t, a._y / t, a._z / t);
+    public static Vec3 operator -(Vec3 v) => new Vec3(-v._x, -v._y, -v._z);
 
 
-    public double LengthSquared() => X * X + Y * Y + Z * Z;
+    public double LengthSquared() => _x * _x + _y * _y + _z * _z;
     public double Length() => Math.Sqrt(LengthSquared());
 
     public static Vec3 Random()
     {
-        return new Vec3(Rand.NextDouble(), Rand.NextDouble(), Rand.NextDouble());
+        return new Vec3(_rand.NextDouble(), _rand.NextDouble(), _rand.NextDouble());
     }
 
     public static Vec3 Random(double min, double max)
     {
         return new Vec3(
-            min + (max - min) * Rand.NextDouble(),
-            min + (max - min) * Rand.NextDouble(),
-            min + (max - min) * Rand.NextDouble()
+            min + (max - min) * _rand.NextDouble(),
+            min + (max - min) * _rand.NextDouble(),
+            min + (max - min) * _rand.NextDouble()
         );
     }
 
     public bool NearZero()
     {
         const double s = 1e-8;
-        return (Math.Abs(X) < s) && (Math.Abs(Y) < s) && (Math.Abs(Z) < s);
+        return (Math.Abs(_x) < s) && (Math.Abs(_y) < s) && (Math.Abs(_z) < s);
     }
 
     public static Vec3 Reflect(Vec3 v, Vec3 n)
@@ -58,15 +58,15 @@ public struct Vec3
 
     public static double Dot(Vec3 a, Vec3 b)
     {
-        return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        return a._x * b._x + a._y * b._y + a._z * b._z;
     }
 
     public static Vec3 Cross(Vec3 a, Vec3 b)
     {
         return new Vec3(
-            a.Y * b.Z - a.Z * b.Y,
-            a.Z * b.X - a.X * b.Z,
-            a.X * b.Y - a.Y * b.X
+            a._y * b._z - a._z * b._y,
+            a._z * b._x - a._x * b._z,
+            a._x * b._y - a._y * b._x
         );
     }
 
@@ -96,5 +96,5 @@ public struct Vec3
         return Dot(inUnitSphere, normal) > 0.0 ? inUnitSphere : -inUnitSphere;
     }
 
-    public override string ToString() => $"{X} {Y} {Z}";
+    public override string ToString() => $"{_x} {_y} {_z}";
 }
