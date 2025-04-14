@@ -1,5 +1,6 @@
 using System;
 
+
 public class Camera {
     public double _aspect_ratio { get; set; } = 1.0;  // Ratio of image width over height
     public int _image_width { get; set; } = 100;  // Rendered image width in pixel count

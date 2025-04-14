@@ -1,5 +1,6 @@
 using System;
-using System.Diagnostics; // Import for Stopwatch
+using System.Diagnostics; // Import for Stopwatch 
+
 
 class Program
 {
@@ -61,20 +62,20 @@ class Program
         // Camera setup
         Camera _cam = new Camera
         {
-            _aspect_ratio      = 16.0 / 9.0,
-            _image_width       = 1280,
-            _samples_per_pixel = 20,
+            _aspect_ratio      = 17.0 / 6.0,
+            _image_width       = 2160,
+            _samples_per_pixel = 25,
             _max_depth         = 15,
-            _vert_fov          = 20,
+            _vert_fov          = 36.87,
             _look_from         = new Vec3(13, 2, 0),
             _look_at           = new Vec3(0, 0.5, 0),
             _vert_up           = new Vec3(0, 1, 0),
-            _defocus_angle     = 0.6,
+            _defocus_angle     = 0.0,
             _focus_dist        = (new Vec3(13, 2, 0) - new Vec3(0, 0.5, 0)).Length()
         };
 
         // Render the scene, and save it to a file
-        _cam.Render(_world, "FinishedProduct.ppm");
+        _cam.Render(_world, "Panoramic.ppm");
 
         // Stop the stopwatch after the render is complete, and records the duration
         _stopwatch.Stop();
